@@ -1,0 +1,33 @@
+1-Al presionar el pulsador por primera vez, el contador del boton se establece en 1, la priodidad del LED1 pasa a +2
+y el resto +1, y se prende el LED1.
+
+2-Cuando se presiona nuevamente, contador = 2, prioridad LED2 +2 y el resto +1, y se prende LED2.
+
+3-Cuando se presiona nuevamente, contador = 3, prioridad LED3 +2 y el resto +1, y se prende LED3.
+
+4-Cuando se presiona nuevamente, contador = 4, y se toman 2 bits del primer valor del vector generado aleatoriamente,
+Si es 0: Se hace un barrido de prioridades con 500 ms, por lo tanto se refleja en un barrido de LEDS.
+Si es 1: Prioridad LED1 +2, resto +1, y se prende LED1.
+Si es 2: Prioridad LED2 +2, resto +1, y se prende LED2.
+Si es 3: Prioridad LED3 +2, resto +1, y se prende LED3.
+
+Se aumenta el indice del vector aleatorio, para que en la proxima vuelta, se tome el segundo valor del vector.
+
+5-Cuando se presiona nuevamente, contador = 5, se resetea contador a 0, todas las prioridades pasan a +1,
+en este punto el planificador deja de comportarse como un apropiativo, y se transforma en un round robin,
+donde todas las tareas son ejecutadas, por lo tanto se ve que se prenden todos los LEDS durante un breve tiempo, y
+al final queda 1 tarea activa (generalmente LED1, la primera en crearse).
+
+6-Y ahora se vuelve a empezar por el primer punto.
+
+Listado de variables importantes:
+
+Contador -> Numero de veces pulsado.
+   A     -> Prioridad LED1.
+   B     -> Prioridad LED2.
+   C     -> Prioridad LED3.
+   j     -> Posicion vector binario.
+ Random  -> Vector Hexa de 20 numeros random.
+ Binario -> Vector de los 2 bits de los numeros del vector random.
+
+Se implemento un mutex en los puntos donde hay que modificar el valor de un pin.
