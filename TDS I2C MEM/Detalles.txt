@@ -1,0 +1,30 @@
+En el TP se presentan 4 tareas:
+
+-Tarea 1: Se encarga de detectar el pulsador que decrementa el tiempo del led y se dispone
+de un contador de veces en que se pulso la tecla. (pin 2.12)
+
+-Tarea 2: Se encarga de prender y apagar el led en funcion de la variable contador. (pin 0.22)
+
+-Tarea 3: Se encarga de detectar el pulsador que guarda el tiempo actual del led, y se
+envia mediante I2C a la memoria el valor de contador. (pin 2.11)
+
+-Tarea 4: Watchdog
+
+Extra: al inicializar se carga en la variable contador, la variable guardada en la memoria.
+En caso de que en la memoria se registre el valor 255 (no dato guardado) u otro dato random,
+se inicializa en contador = 1 correspondiente a la duracion de 512 ms del led.
+
+Se realizo la medicion de los peores tiempo de ejecucion siendo: 
+
+Tarea 1: 2us
+Tarea 2: 2us
+Tarea 3: 109us
+Tarea 4: 1us
+
+Dado esto se dispuso de un sistema de alarma mediante un led en el pin 2.10 para los tiempos de:
+Tarea 1: 3us
+Tarea 2: 3us
+Tarea 3: 110us
+Tarea 4: 2us
+
+Dado que los tiempos de ejecucion son bajos, se deja como tick de sistema por default 1ms.
