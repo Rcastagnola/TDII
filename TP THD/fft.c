@@ -1,26 +1,8 @@
 #include <math.h>
 #include <stdint.h>
 
-//void dft(float *xr, float *xi, float *XR, float *XI, int len)
-//{
-//	int i,j;
-//	for(i=0;i<len;i++)
-//	{
-//		XR[i] = 0.0;
-//		XI[i] = 0.0;
-//		for(j=0;j<len;j++)
-//		{
-//			XR[i]+=xr[j]*cos(2*M_PI*i*j/len) +xi[j]*sin(2*M_PI*i*j/len);
-//			XI[i]+=xi[j]*cos(2*M_PI*i*j/len) -xr[j]*sin(2*M_PI*i*j/len);
-//		}
-//	}
-//}
+extern const unsigned int FFTConst;
 
-/*
- * Invierte los bits de un n�mero dado de len bits.
- * Por ejemplo para 4 bits el 0011 (3) lo invierte
- * como 1100 (12).
- */
 static uint32_t bit_reversal(uint32_t bi, int len)
 {
 	int i;
@@ -33,6 +15,19 @@ static uint32_t bit_reversal(uint32_t bi, int len)
 	}
 	return bo;
 }
+
+static uint32_t nbits(uint32_t n)
+{
+	int i;
+	for (i = 0; i < 32; i++)
+	{
+		if (n & (1 << 31))
+			break;
+		n <<= 1;
+	}
+	return 32 - i - 1;
+}
+
 
 /*
  * FFT Cooley-Tukey decimada en tiempo.
@@ -47,7 +42,7 @@ void fft_radix2(float *xr, float *xi, int len)
 {
 	int i,j;
 	float t_r, t_i;
-	uint32_t Nbits = (int)floor(log2(len));
+	uint32_t Nbits = nbits(len);
 
 	for(i=0;i<len;i++)
 	{
