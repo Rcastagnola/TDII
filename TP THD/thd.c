@@ -36,6 +36,8 @@ static uint16_t buffer[1024];
 
 #define DAC_FREQ 		(1000000)
 #define len_senial		(1024)
+
+extern const unsigned int test[];
 extern const unsigned int bufsenoDAC[];
 
 int FFTConst = 0;
@@ -52,7 +54,7 @@ void TareaDAC(void);
 void fft_radix2(float *xr, float *xi, int len);
 
 
-uint32_t et[5],wcet[5]={0,0,0,0,0};
+uint32_t et[4],wcet[4]={0,0,0,0};
 
 float parteReal[len_senial];
 float parteImag[len_senial];
@@ -77,10 +79,9 @@ int main(void)
 		falla+=despacharTarea(TareaWDT, 0, 5, &et[0]);
 		falla+=despacharTarea(TareaTickLed,0,5,&et[1]);
 		falla+=despacharTarea(TareaADC,0,15,&et[2]);
-		falla+=despacharTarea(TareaTHD,0,150,&et[3]);
-		falla+=despacharTarea(TareaDAC,0,5,&et[4]);
+		falla+=despacharTarea(TareaTHD,0,1500000,&et[3]);
 
-        for(i=0;i<5;i++)
+        for(i=0;i<4;i++)
         	if(wcet[i]<et[i])wcet[i]=et[i];
     	if(falla)
     	{
@@ -117,10 +118,10 @@ void TareaADC(void)
 			{
 				buffer[ix++]=datoADC;
 
-				if(ix==1024)
+				if(ix==len_senial)
 				{
-					ix=0;
-					init=0;
+					ix=2000;
+					init=1;
 				}
 				if(ix<len_senial)
 				{
@@ -133,11 +134,11 @@ void TareaADC(void)
 
 void TareaTHD(void)
 {
-	//if (ix == 2000)
-	//{
-	/*for(uint32_t i = 0; i<len_senial; i++)
+	if (ix == 2000)
 	{
-			parteReal[i] = bufsenoDAC[i];
+	for(uint32_t i = 0; i<len_senial; i++)
+	{
+			parteReal[i] = buffer[i];
 			parteImag[i] = 0;
 	}
 
@@ -159,18 +160,10 @@ void TareaTHD(void)
 
 
 		THD = potenciaTotal - potencia50hz;
-		THD /= potencia50hz;*/
-	//}
+		THD /= potencia50hz;
+	}
 }
 
-
-
-
-void TareaDAC(void)
-{
-	Chip_DAC_UpdateValue(LPC_DAC,bufsenoDAC[txsenial++]>>6);
-	if(txsenial==len_senial) txsenial=0;
-}
 
 
 
