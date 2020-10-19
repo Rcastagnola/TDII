@@ -5,7 +5,7 @@
 
 #define TIC_1MS 		(1000)
 #define TIC_SISTEMA 	(10000)
-#define TIC_LED_MS		(2500)
+#define TIC_LED_MS		(1000)
 #define LED_ROJO_PORT	(0)
 #define LED_ROJO_PIN	(22)
 #define ADC0_PORT		(0)
@@ -15,6 +15,14 @@
 #define DWTINIT()		{DWT->CTRL|=DWT_CTRL_CYCCNTENA_Msk; DWT->CYCCNT=0;}
 #define DWTRESET()		{DWT->CYCCNT=0;}
 #define DWTREAD()		(DWT->CYCCNT)
+
+/*
+ * Hay que definir las frecuencias del los cristales del sistema y del
+ * RTC por eso no funciona.
+ *
+ */
+const uint32_t OscRateIn = 12000000;
+const uint32_t RTCOscRateIn = 32768;
 
 uint16_t datoADC=0;
 uint16_t datoDAC=0;
@@ -27,8 +35,10 @@ static uint16_t buffer[1024];
 #define DAC_MODO_DMA
 
 #define DAC_FREQ 		(1000000)
-#define len		(1024)
+#define len_senial		(1024)
 extern const unsigned int bufsenoDAC[];
+
+int FFTConst = 0;
 
 int txsenial = 0;
 static int ix=0;
@@ -39,12 +49,14 @@ void TareaWDT(void);
 void TareaADC(void);
 void TareaTHD(void);
 void TareaDAC(void);
+void fft_radix2(float *xr, float *xi, int len);
+
 
 uint32_t et[5],wcet[5]={0,0,0,0,0};
 
-float parteReal[len];
-float parteImag[len];
-float potenciaFFT[len];
+float parteReal[len_senial];
+float parteImag[len_senial];
+float potenciaFFT[len_senial];
 
 float potencia50hz = 0;
 float potenciaTotal = 0;
@@ -65,7 +77,7 @@ int main(void)
 		falla+=despacharTarea(TareaWDT, 0, 5, &et[0]);
 		falla+=despacharTarea(TareaTickLed,0,5,&et[1]);
 		falla+=despacharTarea(TareaADC,0,15,&et[2]);
-		falla+=despacharTarea(TareaTHD,0,800,&et[3]);
+		falla+=despacharTarea(TareaTHD,0,150,&et[3]);
 		falla+=despacharTarea(TareaDAC,0,5,&et[4]);
 
         for(i=0;i<5;i++)
@@ -107,10 +119,10 @@ void TareaADC(void)
 
 				if(ix==1024)
 				{
-					ix=2000;
-					init=1;
+					ix=0;
+					init=0;
 				}
-				if(ix<len)
+				if(ix<len_senial)
 				{
 				Chip_ADC_SetStartMode(LPC_ADC,ADC_START_NOW,ADC_TRIGGERMODE_RISING);
 				}
@@ -121,32 +133,34 @@ void TareaADC(void)
 
 void TareaTHD(void)
 {
-	for(uint32_t i = 0; i<len; i++)
+	//if (ix == 2000)
+	//{
+	/*for(uint32_t i = 0; i<len_senial; i++)
 	{
-			parteReal[i] = buffer[i];
+			parteReal[i] = bufsenoDAC[i];
 			parteImag[i] = 0;
 	}
 
 	fs = 1000;
 
-	indice50hz = 25 * (len / fs);
+	indice50hz = 50 * (len_senial / fs);
 
-	fft_radix2(parteReal, parteImag, len);
+	fft_radix2(parteReal, parteImag, len_senial);
 
 
-	for(uint32_t i = 0;i<len/2;i++) potenciaFFT[i] = parteReal[i] * parteReal[i] +  parteImag[i] * parteImag[i];
+	for(uint32_t i = 0;i<len_senial/2;i++) potenciaFFT[i] = parteReal[i] * parteReal[i] +  parteImag[i] * parteImag[i];
 
 	potencia50hz = potenciaFFT[indice50hz - 1] + potenciaFFT[indice50hz] + potenciaFFT[indice50hz+1];
 	potencia50hz *= 2;
-	potencia50hz /= len;
+	potencia50hz /= len_senial;
 
 	potenciaTotal = 0;
-		for(uint16_t i = 1;i<len/2;i++) potenciaTotal += (potenciaFFT[i]*2)/len;
+		for(uint16_t i = 1;i<len_senial/2;i++) potenciaTotal += (potenciaFFT[i]*2)/len_senial;
 
 
 		THD = potenciaTotal - potencia50hz;
-		THD /= potencia50hz;
-
+		THD /= potencia50hz;*/
+	//}
 }
 
 
@@ -155,7 +169,7 @@ void TareaTHD(void)
 void TareaDAC(void)
 {
 	Chip_DAC_UpdateValue(LPC_DAC,bufsenoDAC[txsenial++]>>6);
-	if(txsenial==len) txsenial=0;
+	if(txsenial==len_senial) txsenial=0;
 }
 
 
@@ -167,6 +181,7 @@ void TareaWDT(void)
 
 void InitHardware(void)
 {
+	DMALLIO dacconfig;
 
 	/*Inicializo el Clock del sistema*/
 	Chip_SetupXtalClocking();
@@ -204,7 +219,7 @@ void InitHardware(void)
 	/*Inicializo el DAC*/
 	Chip_IOCON_PinMuxSet(LPC_IOCON,DAC_PORT,DAC_PIN,IOCON_FUNC2);
 	Chip_DAC_Init(LPC_DAC);
-
+	SetTableDAC((int*)bufsenoDAC, len_senial, DAC_FREQ, 0, &dacconfig);
 
 	/*
 	 * Arranco el WWDT en 1.1ms si está definida USAR_WWDT
