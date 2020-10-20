@@ -41,6 +41,11 @@ extern const unsigned int test[];
 extern const unsigned int bufsenoDAC[];
 
 int FFTConst = 0;
+int time1= 0;
+int time2= 0;
+int time3= 0;
+int time4= 0;
+
 
 int txsenial = 0;
 static int ix=0;
@@ -144,23 +149,21 @@ void TareaTHD(void)
 
 	fs = 1000;
 
-	indice50hz = 50 * (len_senial / fs);
+	indice50hz = 50;
 
 	fft_radix2(parteReal, parteImag, len_senial);
-
 
 	for(uint32_t i = 0;i<len_senial/2;i++) potenciaFFT[i] = parteReal[i] * parteReal[i] +  parteImag[i] * parteImag[i];
 
 	potencia50hz = potenciaFFT[indice50hz - 1] + potenciaFFT[indice50hz] + potenciaFFT[indice50hz+1];
 	potencia50hz *= 2;
-	potencia50hz /= len_senial;
 
 	potenciaTotal = 0;
-		for(uint16_t i = 1;i<len_senial/2;i++) potenciaTotal += (potenciaFFT[i]*2)/len_senial;
-
+		for(uint16_t i = 1;i<len_senial/2;i++) potenciaTotal += (potenciaFFT[i]*2);
 
 		THD = potenciaTotal - potencia50hz;
 		THD /= potencia50hz;
+
 	}
 }
 

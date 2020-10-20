@@ -1,0 +1,6 @@
+Tarea ADC: 4uS
+
+Tarea THD: _Cargar buffer: 524 uS
+	   _FFT: 1.048.948 uS -> 1,04 s
+	   _Potencia: 1914 uS
+	   _THD: 2 uS
