@@ -1,0 +1,8 @@
+Adentro de esta carpeta se van a poner los drivers de cada plataforma.
+Los archivos de esta carpera seran ignorados en el sincronizacion del repositorio
+
+Interface del I2C
+/i2c/i2c.c
+/i2c/i2c.h
+
+void EscribirByteToI2c(uint8_t I2C_Address, uint8_t* dato, uint8_t largo);

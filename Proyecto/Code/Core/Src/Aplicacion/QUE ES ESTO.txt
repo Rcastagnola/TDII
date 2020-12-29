@@ -1,0 +1,4 @@
+Aca estarian todos los archivos de la aplicacion.
+No se podra usar ningun tipo de funcion que use cosas especificas de la plataforma 
+
+Cualquier acceso a cosas especificas de la plataforma debera tener su funcion en la carpeta Drivers y estar documentada para realizarla en la otra plataforma.

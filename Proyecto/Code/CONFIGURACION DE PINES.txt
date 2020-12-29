@@ -1,0 +1,14 @@
+Configuracion Inicial sujeta a cambios.
+
+TIMER2 con frecuencia de systembase (Objetivo de usarlo para control de tiempos)
+SYSTICK por defecto pero luego habria que ajustarlo el TICK de nuestro TDS
+
+JTAG -> TIMER1
+PINES -> PA13 y PA14
+
+I2C1 -> SDA: PB7 y SCL: PB6
+USART1 -> RX: PA10 y TX: PA9
+LED_ONBOARD PC13
+
+SALIDAS GENERALES (Reles, Alarmas, etc.) PA0 PA1 PA2 PA3
+ENTRADAS GENERALES (Realimentacion de contactor, etc) PA4 PA5 PA6 PA7

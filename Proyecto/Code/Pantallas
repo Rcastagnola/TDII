@@ -1,0 +1,95 @@
+Aca esta el listado de todas las pantallas y que hace cada tecla en cada pantalla
+
+Asignacion de teclas
+
+0-9 Entrada Numerica
+
+A: Enter
+B: Cancelar
+C: Arriba
+D: Abajo
+
+
+Pantalla Principal
+
+	Presion Actual
+	00.00 bar
+
+Configuracion
+	Configuracion
+
+
+	Alarmas
+		Alarmas
+
+		Baja presion
+			Baja Presion
+
+			Setear Valor alta presion
+				Pesion Maxima:
+				00.00 bar
+
+		Alta Presion
+			Alta Presion
+
+			Setear valor Baja presion
+				Pesion Minima:
+				00.00 bar
+
+		Lazo del Sensor
+			Lazo Sensor
+
+			Setear alarma lazo Sensor
+				Setear Alarma?
+				1: SI      2: NO
+
+	Variables de Operacion
+		Operacion
+
+			Rango minimo operacion
+				Rango Minimo
+
+				Setear rango minimo
+					Setear Minimo
+					00.00 bar
+
+			Rango Maximo operacion
+				Rango Maximo
+		
+				Setear Maximo
+					Setear Maximo
+					00.00 bar
+
+Debug
+	Debug
+
+	Salidas
+		Probar Salidas
+
+		Probar alarma sonora
+			Probar Alarma
+
+			Probar alarma on/of
+				Encender alarma?
+				1: SI      2: NO
+
+		Probar Compresor
+			Probar Compresor
+
+			Probar compresor on/of
+				Encender Compre?
+				1: SI      2: NO
+
+		Ver salida actual del ADC
+			Lectura ADC
+
+			Pantalla que muesta la lectura del adc
+				Valor ADC:
+				xxxx 
+
+		Probar teclado
+			Teclado
+
+			Echo de las teclas apretadas
+				Presione 1 tecla
+				tecla: x

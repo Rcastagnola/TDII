@@ -1,0 +1,14 @@
+Tiempos medidos en Blue Pill
+
+Peor tiempo de ejecucion total: 21074 -> 292.7us
+Total Carga del CPU = 0.2927ms / 1ms = 26.2%
+
+Tarea ADC 81us
+Tarea Promediar 22us
+Tarea Actualizar Salidas 5us
+Tarea Leer Teclado 58us
+Tarea Actualizar LCD 66us
+Tarea Sistema 133us
+Tarea Control Presion 7us
+
+Total peores tiempos de ejecucion = 372us
